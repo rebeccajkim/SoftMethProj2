@@ -20,7 +20,7 @@ public class PayrollProcessing {
 	as display earning statements from the list of employees 
 	by order of date hired or the employees' department.
 	 */
-	public void run() {
+	public void run() { //***exceptions
 		
 		System.out.println("Payroll Processing starts.");
 		Scanner scanner=new Scanner(System.in);
@@ -32,57 +32,134 @@ public class PayrollProcessing {
 			String command=st.nextToken(); 
 		
 			if(command.equals("AP")) { //part-time employee w hourly pay rate
-			String name = st.nextToken();
-			String depCode = st.nextToken();
-			String date = st.nextToken();
-			Date datePublished = new Date(date);
-			Employee employee = new Employee(name, depCode, datePublished);
-			String moneyEarned = st.nextToken();
-			if((depCode.equals("CS")) || (depCode.equals("ECE")) || (depCode.equals("IT"))) {
-			    //call add method here and also check if employee already exists or not
-				if(company.add(employee)) {
-					System.out.println("Employee added.");
-				} else {
-					System.out.println("Employee already in the list.");
+				String name = st.nextToken();
+				String depCode = st.nextToken();
+				String date = st.nextToken();
+				double hourlyRate = Double.parseDouble(st.nextToken());
+				Parttime parttime=new Parttime(name, depCode, date, hourlyRate); //**idk if employee or parttime
+				if(!(depCode.equals("CS") || depCode.equals("ECE") || depCode.equals("IT"))) {
+					System.out.println("'" + depCode + "'" + " is not a valid department code.");
 				}
-			} else {
-				System.out.println("'" + depCode + "' is not a valid department code.");
-			}
+				else if(!parttime.getProfile().getDateHired().isValid()) {
+					System.out.println(date + " is not a valid date!");
+				}
+				else {
+					if(company.add(parttime)) {
+						System.out.println("Employee added.");
+					}
+					else {
+						System.out.println("Employee already in the list.");
+					}
+				} 		
+			} 
+			else if(command.equals("AF")) { //full-time employee w annual salary
+				String name = st.nextToken();
+				String depCode = st.nextToken();
+				String date = st.nextToken();
+				double annualSalary = Double.parseDouble(st.nextToken());
+				Fulltime fulltime=new Fulltime(name, depCode, date, annualSalary);
+				if(!(depCode.equals("CS") || depCode.equals("ECE") || depCode.equals("IT"))) {
+					System.out.println("'" + depCode + "'" + " is not a valid department code.");
+				}
+				else if(!fulltime.getProfile().getDateHired().isValid()) {
+					System.out.println(date + " is not a valid date!");
+				}
+				else {
+					if(company.add(fulltime)) {
+						System.out.println("Employee added.");
+					}
+					else {
+						System.out.println("Employee already in the list.");
+					}
+				} 		
+			} 
+			else if(command.equals("AM")) { //full-time employee w diff roles
+				String name = st.nextToken();
+				String depCode = st.nextToken();
+				String date = st.nextToken();
+				double annualSalary = Double.parseDouble(st.nextToken());
+				int intCode = Integer.parseInt(st.nextToken());
+				int MANAGER_CODE=1;
+				int DEPARTMENT_HEAD_CODE=2;
+				int DIRECTOR_CODE=3;
+				Management management=new Management(name, depCode, date, annualSalary, "");
+				if(intCode==MANAGER_CODE) {
+					management.setRole("Manager");
+				}
+				else if(intCode==DEPARTMENT_HEAD_CODE) {
+					management.setRole("Department Head");
+				}
+				else if(intCode==DIRECTOR_CODE) {
+					management.setRole("Director");
+				}
+				else {
+					System.out.println("Invalid management code.");
+				}
+				if(!(depCode.equals("CS") || depCode.equals("ECE") || depCode.equals("IT"))) {
+					System.out.println("'" + depCode + "'" + " is not a valid department code.");
+				}
+				else if(!management.getProfile().getDateHired().isValid()) { 
+					System.out.println(date + " is not a valid date!");
+				}
+				else {
+					if(company.add(management)) {
+						System.out.println("Employee added.");
+					}
+					else {
+						System.out.println("Employee already in the list.");
+					}
+				} 		
+			} 
+			else if(command.equals("R")) { //remove employee
+				String name=st.nextToken();
+				String depCode=st.nextToken();
+				String date=st.nextToken();
+				Employee employee=new Employee(name, depCode, date);
+				if(company.remove(employee)) {
+					System.out.println("Employee removed.");
+				}
+				else {
+					System.out.println("Employee does not exist.");
+				}
+			} 
+			else if(command.equals("C")) { //calculate payments
+				company.processPayments();
+			} 
+			else if(command.equals("S")) { //set hours for employee
+				String name=st.nextToken();
+				String depCode=st.nextToken();
+				String date=st.nextToken();
+				double hours=Double.parseDouble(st.nextToken());
+				Employee employee=new Employee(name, depCode, date);
+				if(hours<0) {
+					System.out.println("Working hours cannot be negative.");
+				}
+				else if(hours>100) {
+					System.out.println("Invalid Hours: over 100.");
+				}
+				else {
+					if(company.setHours(employee)) {
+						System.out.println("Working hours set.");
+					}
+				}
+			} 
 			
-			} else if(command.equals("AF")) { //full-time employee w annual salary
-				
-			} else if(command.equals("AM")) { //full-time employee w diff roles
-				
-			} else if(command.equals("R")) { //remove employee
-				
-			} else if(command.equals("C")) { //calculate payments
-				
-			} else if(command.equals("S")) { //set hours for employee
-				
-			} else if(command.equals("PA")) { //earnings for all employees
-				int NUM_EMPLOYEE = company.getnumEmployee();
-				if(NUM_EMPLOYEE > 0) {
-				System.out.println("--Printing earning statements for all employees--");
+			else if(command.equals("PA")) { //earnings for all employees
 				company.print();
-				} else {
-					System.out.println("Employee database is empty");
-				}	
 				
-			} else if(command.equals("PH")) { //earnings by date hired
-				
-			} else if(command.equals("PD")) { //earnings grouped by department
-				
-			} else {
+			} 
+			else if(command.equals("PD")) { //earnings grouped by department
+				company.printByDepartment();
+			} 
+			else if(command.equals("PH")) { //earnings by date hired
+				company.printByDate();
+			} 
+			else {
 				System.out.println("Command '" + command + "' is not supported!");
 			}
 			line = scanner.nextLine();	
 		 }
 		System.out.println("Payroll Processing completed."); //quit
-		scanner.close();
-		//} catch (Exception e) {
-			//  System.out.println("Exception error! Please recheck input!");
-		//	}
-		
-		
+		scanner.close();		
 	}
 }

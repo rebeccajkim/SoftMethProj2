@@ -21,6 +21,10 @@ public class Management extends Fulltime {
 		}
 	}
 	
+	public void setRole(String role) {
+		this.role=role;
+	}
+	
 	@Override 
 	public void calculatePayment() { 
 		super.calculatePayment();

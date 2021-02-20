@@ -5,9 +5,17 @@ The company class stores all the employees in an array-based list. These employe
 be added, removed, checked out, have payments processed, and printed in a list.
 @author mayeesha, rebecca
 */
-public class Company {
-	private Employee[] empList;
+public class Company { //set, process, dept
+	private Employee[] emplist;
 	private int numEmployee;
+	
+	/**
+	Getter method for numEmployee so it can be used in another classe
+	@return numEmployee
+	*/
+	public int getnumEmployee() {
+		return numEmployee;
+	}
 	
 	/**
 	Method used to help other methods find an employee in the employee list and 
@@ -18,7 +26,7 @@ public class Company {
 	private int find(Employee employee) { 
 		int count= 0;
 		while(count<numEmployee) {
-			if(empList[count].equals(empList)) {
+			if(emplist[count].equals(employee)) {
 				return count; //index in array not serial num
 			}
 			count++;
@@ -32,33 +40,33 @@ public class Company {
 	*/
 	private void grow() {
 		int GROW_VAR = 4;
-		Employee[] temp=new Employee[empList.length+GROW_VAR];
+		Employee[] temp=new Employee[emplist.length+GROW_VAR];
 		for(int i=0; i<numEmployee; i++) {
-			temp[i]=empList[i];
+			temp[i]=emplist[i];
 		}
-		empList=temp;
+		emplist=temp;
 	} 
 	
 	/**
 	Method to add an employee to the employee list. Also, we grow the list capacity 
 	when it's full and only add the employee if their profile is valid. 
 	@param employee to be added
+	@return true if added, false if not
 	*/
-	public boolean add(Employee employee) { 
-		if(employee.getDateHired().isValid()) {
-			if(empList.length==numEmployee) { //list full
+	public boolean add(Employee employee) { //**********depends type of employee bro
+		if(find(employee)>-1) { //valid date and employee doesnt exist yet
+			if(emplist.length==numEmployee) { //list full
 				grow();
 			} 
 			if(numEmployee==0) {
-				empList[0] = employee; //all empty slots	
-				return true;
+				emplist[0] = employee; //all empty slots	
 			}
 			else {
-				int ptr=empList.length-1;
-				while(empList[ptr]==null) { //first empty slot
+				int ptr=emplist.length-1;
+				while(emplist[ptr]==null) { //first empty slot
 					ptr--;
 				}
-				empList[ptr+1] = employee;
+				emplist[ptr+1] = employee;
 				
 			}
 			numEmployee++; //increase employee count
@@ -77,24 +85,31 @@ public class Company {
 	public boolean remove(Employee employee) { 
 		int index = find(employee);
 		if(index>-1) {
-			for(int i=index; i<empList.length-1; i++) {
-				empList[i] = empList[i+1];
+			for(int i=index; i<emplist.length-1; i++) {
+				emplist[i] = emplist[i+1];
 			}
-			if(numEmployee == empList.length) { //put a null space
-				empList[empList.length-1] = null; 
+			if(numEmployee == emplist.length) { //put a null space
+				emplist[emplist.length-1] = null; 
 			}
 			numEmployee--;
 			return true;
 		}
-		return false;
+		return false; //doesnt exist
 	}
 	
 	/**
 	Method to set a part time employees working hours.
 	@param part time employee's hours to be set
 	*/
-	public boolean setHours(Employee employee) {
-		
+	public boolean setHours(Employee employee) { //???
+		if(employee instanceof Parttime) { //or just employee.getProfile().getDepartment() idk
+			int index=find(employee);
+			if(index>-1) { //exists
+				return true;
+			}
+			return false; //idk if possible to not have employee/no print for it
+		}
+		return false;
 	} 
 	
 	/**
@@ -102,7 +117,24 @@ public class Company {
 	to ensure that the employees receive their proper payments by processing them.
 	(better description?) 
 	*/
-	public void processPayments() { } 
+	public void processPayments() { 
+		for(int i=0; i<numEmployee; i++) {
+			if(emplist[i] instanceof Fulltime) {
+				if(emplist[i] instanceof Management) {
+					Management management=(Management) emplist[i];
+					management.calculatePayment();
+				}
+				else {
+					Fulltime fulltime=(Fulltime) emplist[i];
+					fulltime.calculatePayment();
+				}
+			} 
+			else { //parttime
+				Parttime parttime=(Parttime) emplist[i];
+				parttime.calculatePayment();
+			}
+		}
+	} 
 	
 	/**
 	Method to print the earning statements for all the employers in the company
@@ -110,8 +142,8 @@ public class Company {
 	 */
 	public void print() {
 		if(numEmployee>0) {
-			for(int i=0;i<numEmployee;i++) {
-				System.out.println(empList[i].toString());
+			for(int i=0; i<numEmployee; i++) {
+				System.out.println(emplist[i].toString()); //**make sure its part/full toString not just employee
 			}
 		}
 	} 
@@ -120,19 +152,159 @@ public class Company {
 	Method to print the earning statements for all the employers in the company
 	by the order of their Department from the employee list
 	 */
-	public void printByDepartment() { } 
+	public void printByDepartment() { //**idk how sorted besides just cs ece it
+		if(numEmployee>0) {
+			System.out.println("--Printing earning statements by department--");		
+			mergeSortDept(emplist,0,numEmployee-1);
+			for(int i=0; i<numEmployee; i++) {
+				System.out.println(emplist[i].toString());
+			}
+		}
+		else {
+			System.out.println("Employee database is empty.");
+		}
+	}
+
+	/**
+	Helper method to merge sort the employees in order of department
+	@param employee list array
+	@param left index
+	@param right index
+	*/
+	public static void mergeSortDept(Employee[] emplist, int left, int right) { 
+		if(right<=left) return;
+		int HALF=2;
+		int mid=(left+right)/HALF; //left, right, mid are indexes
+		mergeSortDept(emplist,left,mid);
+		mergeSortDept(emplist,mid+1,right);
+		mergeDept(emplist,left,mid,right);
+	}
+
+	/**
+	Helper method to merge two arrays together so it can be sorted in order of department
+	@param employee list array
+	@param left index
+	@param mid index
+	@param right index
+	*/
+	public static void mergeDept(Employee[] emplist, int left, int mid, int right) {
+		Employee[] leftEmplist=new Employee[mid-left+1];
+		Employee[] rightEmplist=new Employee[right-mid];
+		for(int i=0;i<mid-left+1;i++) {
+			leftEmplist[i]=emplist[left+i];
+		}
+		for(int j=0;j<right-mid;j++) {
+			rightEmplist[j]=emplist[mid+j+1];
+		}
+		int leftIndex=0;
+		int rightIndex=0;
+		for(int k=left;k<right+1;k++) {
+			if(leftIndex<mid-left+1 && rightIndex<right-mid) { //setter, getter constructors for book
+				if((leftEmplist[leftIndex].getProfile().getDepartment().equals("CS") &&
+								rightEmplist[rightIndex].getProfile().getDepartment().equals("ECE"))
+						|| (leftEmplist[leftIndex].getProfile().getDepartment().equals("CS") &&
+								rightEmplist[rightIndex].getProfile().getDepartment().equals("IT"))
+						|| (leftEmplist[leftIndex].getProfile().getDepartment().equals("ECE") &&
+								rightEmplist[rightIndex].getProfile().getDepartment().equals("IT"))) {
+					emplist[k]=leftEmplist[leftIndex];
+					leftIndex++;
+				}
+				else {
+					emplist[k]=rightEmplist[rightIndex];
+					rightIndex++;
+				}
+			}
+			else if(leftIndex<mid-left+1) {
+				emplist[k]=leftEmplist[leftIndex];
+				leftIndex++;
+			}
+			else if(rightIndex<right-mid) {
+				emplist[k]=rightEmplist[rightIndex];
+				rightIndex++;
+			}
+		}
+	}
 	
 	/**
 	Method to print the earning statements for all the employers in the company
 	by the order of date from the employee list
-	 */
-	public void printByDate() { } 
-	/**
-	Getter method for numEmployee so it can be used in another classe
-	@return numEmployee
 	*/
-	public int getnumEmployee() {
-		return numEmployee;
+	public void printByDate() { //print the list of books by datePublished (ascending)
+		if(numEmployee>0) {
+			System.out.println("--Printing earning statements by date hired--");		
+			mergeSortDate(emplist,0,numEmployee-1);
+			for(int i=0;i<numEmployee;i++) {
+				System.out.println(emplist[i].toString());
+			}
+		}
+		else {
+			System.out.println("Employee database is empty.");
+		}
 	}
 	
+	/**
+	Helper method to merge sort the employees in order of dates hired
+	@param employee list array
+	@param left index
+	@param right index
+	*/
+	public static void mergeSortDate(Employee[] emplist, int left, int right) { 
+		if(right<=left) return;
+		int HALF=2;
+		int mid=(left+right)/HALF; //left, right, mid are indexes
+		mergeSortDate(emplist,left,mid);
+		mergeSortDate(emplist,mid+1,right);
+		mergeDate(emplist,left,mid,right);
+	}
+	
+	/**
+	Helper method to merge two arrays together so it can be sorted in order of dates hired
+	@param employee list array
+	@param left index
+	@param mid index
+	@param right index
+	*/
+	public static void mergeDate(Employee[] emplist, int left, int mid, int right) {
+		Employee[] leftEmplist=new Employee[mid-left+1];
+		Employee[] rightEmplist=new Employee[right-mid];
+		for(int i=0;i<mid-left+1;i++) {
+			leftEmplist[i]=emplist[left+i];
+		}
+		for(int j=0;j<right-mid;j++) {
+			rightEmplist[j]=emplist[mid+j+1];
+		}
+		int leftIndex=0;
+		int rightIndex=0;
+		for(int k=left;k<right+1;k++) {
+			if(leftIndex<mid-left+1 && rightIndex<right-mid) { //setter, getter constructors for book
+				if((leftEmplist[leftIndex].getProfile().getDateHired().getYear()
+								<rightEmplist[rightIndex].getProfile().getDateHired().getYear())
+						|| (leftEmplist[leftIndex].getProfile().getDateHired().getYear()
+								==rightEmplist[rightIndex].getProfile().getDateHired().getYear() 
+							&& leftEmplist[leftIndex].getProfile().getDateHired().getMonth()
+								<rightEmplist[rightIndex].getProfile().getDateHired().getMonth())
+						|| (leftEmplist[leftIndex].getProfile().getDateHired().getYear()
+								==rightEmplist[rightIndex].getProfile().getDateHired().getYear() 
+							&& leftEmplist[leftIndex].getProfile().getDateHired().getMonth()
+								==rightEmplist[rightIndex].getProfile().getDateHired().getMonth() 
+							&& leftEmplist[leftIndex].getProfile().getDateHired().getDay()
+								<rightEmplist[rightIndex].getProfile().getDateHired().getDay())) {
+					emplist[k]=leftEmplist[leftIndex];
+					leftIndex++;
+				}
+				else {
+					emplist[k]=rightEmplist[rightIndex];
+					rightIndex++;
+				}
+			}
+			else if(leftIndex<mid-left+1) {
+				emplist[k]=leftEmplist[leftIndex];
+				leftIndex++;
+			}
+			else if(rightIndex<right-mid) {
+				emplist[k]=rightEmplist[rightIndex];
+				rightIndex++;
+			}
+		}
+	}
 }

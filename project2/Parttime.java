@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 public class Parttime extends Employee {
 	
 	private double payment;
-	private int hours;
+	private double hours;
 	private double hourlyRate;
 	
 	public Parttime(String name, String department, String date, double hourlyRate) {
@@ -15,14 +15,14 @@ public class Parttime extends Employee {
 		this.hourlyRate=hourlyRate;
 	}
 	
-	public void setHours(int hours) {
+	public void setHours(double hours) {
 		this.hours=hours;
 	}
 	
 	@Override 
 	public void calculatePayment() { 
-		int MAX_HOURS_PERIOD=80;
-		int OVERTIME_RATE=1.5; //check in payrollprocessing or company that its not over 100 hours
+		double MAX_HOURS_PERIOD=80;
+		double OVERTIME_RATE=1.5; //check in payrollprocessing or company that its not over 100 hours
 		if(hours<=MAX_HOURS_PERIOD) {
 			payment=payment+hours*hourlyRate;
 		}

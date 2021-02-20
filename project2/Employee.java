@@ -7,7 +7,7 @@ The employee class holds all the main attributes of an employee.
 */
 public class Employee {
 	//not sure what other instance variables to add for an employee
-	protected Profile profile; 
+	Profile profile; 
 
 	public Employee(String name, String department, String date) {
 		profile.setName(name);

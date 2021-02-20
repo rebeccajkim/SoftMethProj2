@@ -6,6 +6,12 @@ public class Profile {
 	private String department; //department code CS, ECE, IT
 	private Date dateHired;
 	
+	public Profile(String name, String department, String date) {
+		this.name=name;
+		this.department=department;
+		dateHired=new Date(date);
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -61,9 +67,7 @@ public class Profile {
 					&& profile.dateHired.getMonth()==this.dateHired.getMonth() && profile.dateHired.getDay()==this.dateHired.getDay()) {
 				return true;
 			}
-			else {
-				return false;
-			}
+			return false;
 		}
 		return false;
 	}
