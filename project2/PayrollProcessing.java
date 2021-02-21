@@ -30,13 +30,13 @@ public class PayrollProcessing {
 		while(!line.equals("Q")) {
 			StringTokenizer st=new StringTokenizer(line," ",false);
 			String command=st.nextToken(); 
-		
 			if(command.equals("AP")) { //part-time employee w hourly pay rate
 				String name = st.nextToken();
 				String depCode = st.nextToken();
 				String date = st.nextToken();
 				double hourlyRate = Double.parseDouble(st.nextToken());
-				Parttime parttime=new Parttime(name, depCode, date, hourlyRate); //**idk if employee or parttime
+				Profile profile=new Profile(name, depCode, date);
+				Parttime parttime=new Parttime(profile, hourlyRate); //**idk if employee or parttime
 				if(!(depCode.equals("CS") || depCode.equals("ECE") || depCode.equals("IT"))) {
 					System.out.println("'" + depCode + "'" + " is not a valid department code.");
 				}
@@ -57,7 +57,7 @@ public class PayrollProcessing {
 				String depCode = st.nextToken();
 				String date = st.nextToken();
 				double annualSalary = Double.parseDouble(st.nextToken());
-				Fulltime fulltime=new Fulltime(name, depCode, date, annualSalary);
+				Fulltime fulltime=new Fulltime(new Profile(name, depCode, date), annualSalary);
 				if(!(depCode.equals("CS") || depCode.equals("ECE") || depCode.equals("IT"))) {
 					System.out.println("'" + depCode + "'" + " is not a valid department code.");
 				}
@@ -82,7 +82,7 @@ public class PayrollProcessing {
 				int MANAGER_CODE=1;
 				int DEPARTMENT_HEAD_CODE=2;
 				int DIRECTOR_CODE=3;
-				Management management=new Management(name, depCode, date, annualSalary, "");
+				Management management=new Management(new Profile(name, depCode, date), annualSalary, "");
 				if(intCode==MANAGER_CODE) {
 					management.setRole("Manager");
 				}
@@ -114,7 +114,7 @@ public class PayrollProcessing {
 				String name=st.nextToken();
 				String depCode=st.nextToken();
 				String date=st.nextToken();
-				Employee employee=new Employee(name, depCode, date);
+				Employee employee=new Employee(new Profile(name, depCode, date));
 				if(company.remove(employee)) {
 					System.out.println("Employee removed.");
 				}
@@ -130,7 +130,7 @@ public class PayrollProcessing {
 				String depCode=st.nextToken();
 				String date=st.nextToken();
 				double hours=Double.parseDouble(st.nextToken());
-				Employee employee=new Employee(name, depCode, date);
+				Employee employee=new Employee(new Profile(name, depCode, date));
 				if(hours<0) {
 					System.out.println("Working hours cannot be negative.");
 				}

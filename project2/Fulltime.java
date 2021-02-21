@@ -6,31 +6,31 @@ public class Fulltime extends Employee {
 	
 	protected double annualSalary;
 	
-	public Fulltime(String name, String department, String date, double annualSalary) {
-		super(name, department, date);
+	public Fulltime(Profile profile, double annualSalary) {
+		super(profile);
 		this.annualSalary=annualSalary;
 	}
 	
 	@Override 
 	public void calculatePayment() { 
 		double PAY_PERIODS=26;
-		payment=payment+(annualSalary/PAY_PERIODS);
+		setPayment(getPayment()+(annualSalary/PAY_PERIODS));
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof Fulltime) {
 			Fulltime fulltime=(Fulltime) obj;
-			return fulltime.profile.equals(this.profile) {
+			return fulltime.getProfile().equals(this.getProfile());
 		}
 		return false;
 	}
 	
 	@Override 
 	public String toString() { 
-		String pattern="###,000.00";
+		String pattern="###,##0.00";
 		DecimalFormat df=new DecimalFormat(pattern);
-		return super.toString() + "::Payment" + df.format(payment) + "::FULL TIME::Annual Salary $" 
+		return super.toString() + "::Payment $" + df.format(getPayment()) + "::FULL TIME::Annual Salary $" 
 				+ df.format(annualSalary);
 	} 
 }

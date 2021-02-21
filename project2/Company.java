@@ -9,6 +9,11 @@ public class Company { //set, process, dept
 	private Employee[] emplist;
 	private int numEmployee;
 	
+	public Company() {
+		emplist=new Employee[0];
+		numEmployee=0;
+	}
+	
 	/**
 	Getter method for numEmployee so it can be used in another classe
 	@return numEmployee
@@ -54,7 +59,7 @@ public class Company { //set, process, dept
 	@return true if added, false if not
 	*/
 	public boolean add(Employee employee) { //**********depends type of employee bro
-		if(find(employee)>-1) { //valid date and employee doesnt exist yet
+		if(find(employee)==-1) { //valid date and dept code already checked so just is employee already there
 			if(emplist.length==numEmployee) { //list full
 				grow();
 			} 
@@ -72,7 +77,7 @@ public class Company { //set, process, dept
 			numEmployee++; //increase employee count
 			return true;
 		}
-		return false;
+		return false; //already found employee there
 	} 
 	
 	/**

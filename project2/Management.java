@@ -7,8 +7,8 @@ public class Management extends Fulltime {
 	private String role;
 	private double additionalComp;
 	
-	public Management(String name, String department, String date, double annualSalary, String role) {
-		super(name, department, date, annualSalary);
+	public Management(Profile profile, double annualSalary, String role) {
+		super(profile, annualSalary);
 		this.role=role;
 		if(role.equals("Manager")) {
 			additionalComp=192.31;
@@ -28,21 +28,21 @@ public class Management extends Fulltime {
 	@Override 
 	public void calculatePayment() { 
 		super.calculatePayment();
-		payment=payment+additionalComp;
+		setPayment(getPayment()+additionalComp);
 	} 
 	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof Management) {
 			Management management=(Management) obj;
-			return management.profile.equals(this.profile);
+			return management.getProfile().equals(this.getProfile());
 		}
 		return false;
 	}
 	
 	@Override 
 	public String toString() { 
-		String pattern="###,000.00";
+		String pattern="###,##0.00";
 		DecimalFormat df=new DecimalFormat(pattern);
 		return super.toString() + "::" + role + " Compensation $" 
 				+ df.format(additionalComp); 

@@ -7,8 +7,8 @@ public class Parttime extends Employee {
 	private double hours;
 	private double hourlyRate;
 	
-	public Parttime(String name, String department, String date, double hourlyRate) {
-		super(name, department, date);
+	public Parttime(Profile profile, double hourlyRate) {
+		super(profile);
 		hours=0;
 		this.hourlyRate=hourlyRate;
 	}
@@ -22,11 +22,11 @@ public class Parttime extends Employee {
 		double MAX_HOURS_PERIOD=80;
 		double OVERTIME_RATE=1.5; //check in payrollprocessing or company that its not over 100 hours
 		if(hours<=MAX_HOURS_PERIOD) {
-			payment=payment+hours*hourlyRate;
+			setPayment(getPayment()+hours*hourlyRate);
 		}
 		else {
-			payment=payment+MAX_HOURS_PERIOD*hourlyRate;
-			payment=payment+OVERTIME_RATE*(hours-MAX_HOURS_PERIOD)*hourlyRate;
+			setPayment(getPayment()+MAX_HOURS_PERIOD*hourlyRate);
+			setPayment(getPayment()+OVERTIME_RATE*(hours-MAX_HOURS_PERIOD)*hourlyRate);
 		}
 	}
 	
@@ -34,16 +34,16 @@ public class Parttime extends Employee {
 	public boolean equals(Object obj) {
 		if(obj instanceof Fulltime) {
 			Parttime parttime=(Parttime) obj;
-			return parttime.profile.getName().equals(this.profile.getName());
+			return parttime.getProfile().equals(this.getProfile());
 		}
 		return false;
 	}
 	
 	@Override 
 	public String toString() { 
-		String pattern="###,000.00";
+		String pattern="###,##0.00";
 		DecimalFormat df=new DecimalFormat(pattern);
-		return super.toString() + "::Payment" + df.format(payment) + "::PART TIME::Hourly Rate $" 
+		return super.toString() + "::Payment $" + df.format(getPayment()) + "::PART TIME::Hourly Rate $" 
 				+ df.format(hourlyRate) + "::Hours worked this period: " + hours;
 	} 
 }
