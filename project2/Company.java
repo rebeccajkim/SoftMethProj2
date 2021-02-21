@@ -31,7 +31,7 @@ public class Company { //set, process, dept
 	private int find(Employee employee) { 
 		int count= 0;
 		while(count<numEmployee) {
-			if(emplist[count].equals(employee)) {
+			if(emplist[count].getProfile().equals(employee.getProfile())) {
 				return count; //index in array not serial num
 			}
 			count++;
@@ -104,17 +104,16 @@ public class Company { //set, process, dept
 	
 	/**
 	Method to set a part time employees working hours.
-	@param part time employee's hours to be set
+	@param part time employee's hours to be set 
+	@return true if parttime employee exists, false if not
 	*/
-	public boolean setHours(Employee employee) { //???
-		if(employee instanceof Parttime) { //or just employee.getProfile().getDepartment() idk
-			int index=find(employee);
-			if(index>-1) { //exists
-				return true;
-			}
-			return false; //idk if possible to not have employee/no print for it
+	public boolean setHours(Employee employee) { 
+		int index=find(employee);
+		if(index>-1 && emplist[index] instanceof Parttime) { //exists and its parttime
+			((Parttime) emplist[index]).setHours(((Parttime) employee).getHours());
+			return true;
 		}
-		return false;
+		return false; //**idk if possible to not have employee/no print for it	
 	} 
 	
 	/**

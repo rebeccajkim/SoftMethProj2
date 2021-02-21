@@ -123,14 +123,16 @@ public class PayrollProcessing {
 				}
 			} 
 			else if(command.equals("C")) { //calculate payments
-				company.processPayments();
-			} 
+				company.processPayments());
+				System.out.println("Calculation of employee payments is done.");
+			}  
 			else if(command.equals("S")) { //set hours for employee
 				String name=st.nextToken();
 				String depCode=st.nextToken();
 				String date=st.nextToken();
 				double hours=Double.parseDouble(st.nextToken());
-				Employee employee=new Employee(new Profile(name, depCode, date));
+				Parttime parttime=new Parttime(new Profile(name, depCode, date), 0);
+				parttime.setHours(hours);
 				if(hours<0) {
 					System.out.println("Working hours cannot be negative.");
 				}
@@ -138,9 +140,9 @@ public class PayrollProcessing {
 					System.out.println("Invalid Hours: over 100.");
 				}
 				else {
-					if(company.setHours(employee)) {
+					if(company.setHours(parttime)) {
 						System.out.println("Working hours set.");
-					}
+					} //no print for if employee doesnt exist or isnt parttime
 				}
 			} 
 			
