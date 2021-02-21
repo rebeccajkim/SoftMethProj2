@@ -7,12 +7,14 @@ The employee class holds all the main attributes of an employee.
 */
 public class Employee {
 	//not sure what other instance variables to add for an employee
-	Profile profile; 
+	protected Profile profile; 
+	protected double payment;
 
 	public Employee(String name, String department, String date) {
 		profile.setName(name);
 		profile.setDepartment(department);
 		profile.setDate(new Date(date));
+		payment=0;
 	}
 	
 	public Profile getProfile() { //**idk but did this in book for date ig
@@ -23,8 +25,8 @@ public class Employee {
 	This method calculates the payments for an employee, keeping 
 	in mind the total hours they worked. (fix if im wrong later...)
 	 */
-	//public void calculatePayment() { //not in this class
-	//}
+	public void calculatePayment() {
+	}
 	
 	@Override
 	public boolean equals(Object obj) {

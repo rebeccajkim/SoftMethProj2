@@ -3,14 +3,12 @@ package project2;
 import java.text.DecimalFormat;
 
 public class Parttime extends Employee {
-	
-	private double payment;
+
 	private double hours;
 	private double hourlyRate;
 	
 	public Parttime(String name, String department, String date, double hourlyRate) {
 		super(name, department, date);
-		payment=0;
 		hours=0;
 		this.hourlyRate=hourlyRate;
 	}

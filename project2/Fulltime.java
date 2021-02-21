@@ -4,12 +4,10 @@ import java.text.DecimalFormat;
 
 public class Fulltime extends Employee {
 	
-	protected double payment; //could do super.get methods instead idk
 	protected double annualSalary;
 	
 	public Fulltime(String name, String department, String date, double annualSalary) {
 		super(name, department, date);
-		payment=0;
 		this.annualSalary=annualSalary;
 	}
 	
