@@ -82,15 +82,15 @@ public class PayrollProcessing {
 				int MANAGER_CODE=1;
 				int DEPARTMENT_HEAD_CODE=2;
 				int DIRECTOR_CODE=3;
-				Management management=new Management(new Profile(name, depCode, date), annualSalary, "");
+				Management management=null;
 				if(intCode==MANAGER_CODE) {
-					management.setRole("Manager");
+					management=new Management(new Profile(name, depCode, date), annualSalary, "Manager");
 				}
 				else if(intCode==DEPARTMENT_HEAD_CODE) {
-					management.setRole("Department Head");
+					management=new Management(new Profile(name, depCode, date), annualSalary, "Department Head");
 				}
 				else if(intCode==DIRECTOR_CODE) {
-					management.setRole("Director");
+					management=new Management(new Profile(name, depCode, date), annualSalary, "Director");
 				}
 				else {
 					System.out.println("Invalid management code.");
@@ -123,7 +123,7 @@ public class PayrollProcessing {
 				}
 			} 
 			else if(command.equals("C")) { //calculate payments
-				company.processPayments());
+				company.processPayments();
 				System.out.println("Calculation of employee payments is done.");
 			}  
 			else if(command.equals("S")) { //set hours for employee

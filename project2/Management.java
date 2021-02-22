@@ -11,18 +11,14 @@ public class Management extends Fulltime {
 		super(profile, annualSalary);
 		this.role=role;
 		if(role.equals("Manager")) {
-			additionalComp=192.31;
+			additionalComp=192.31; //5,000/26
 		}
 		else if(role.equals("Department Head")) {
-			additionalComp=365.38;
+			additionalComp=365.38; //9,500/26
 		}
 		else { //Director
-			additionalComp=461.54;
+			additionalComp=461.54; //12,000/26
 		}
-	}
-	
-	public void setRole(String role) {
-		this.role=role;
 	}
 	
 	@Override 
