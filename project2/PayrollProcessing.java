@@ -83,30 +83,32 @@ public class PayrollProcessing {
 				int DEPARTMENT_HEAD_CODE=2;
 				int DIRECTOR_CODE=3;
 				Management management=null;
-				if(intCode==MANAGER_CODE) {
-					management=new Management(new Profile(name, depCode, date), annualSalary, "Manager");
-				}
-				else if(intCode==DEPARTMENT_HEAD_CODE) {
-					management=new Management(new Profile(name, depCode, date), annualSalary, "Department Head");
-				}
-				else if(intCode==DIRECTOR_CODE) {
-					management=new Management(new Profile(name, depCode, date), annualSalary, "Director");
-				}
-				else {
+				if(intCode<MANAGER_CODE || intCode>DIRECTOR_CODE) {
 					System.out.println("Invalid management code.");
 				}
-				if(!(depCode.equals("CS") || depCode.equals("ECE") || depCode.equals("IT"))) {
-					System.out.println("'" + depCode + "'" + " is not a valid department code.");
-				}
-				else if(!management.getProfile().getDateHired().isValid()) { 
-					System.out.println(date + " is not a valid date!");
-				}
 				else {
-					if(company.add(management)) {
-						System.out.println("Employee added.");
+					if(intCode==MANAGER_CODE) {
+						management=new Management(new Profile(name, depCode, date), annualSalary, "Manager");
+					}
+					else if(intCode==DEPARTMENT_HEAD_CODE) {
+						management=new Management(new Profile(name, depCode, date), annualSalary, "Department Head");
+					}
+					else if(intCode==DIRECTOR_CODE) { //could just do else ig
+						management=new Management(new Profile(name, depCode, date), annualSalary, "Director");
+					}
+					if(!(depCode.equals("CS") || depCode.equals("ECE") || depCode.equals("IT"))) {
+						System.out.println("'" + depCode + "'" + " is not a valid department code.");
+					}
+					else if(!management.getProfile().getDateHired().isValid()) { 
+						System.out.println(date + " is not a valid date!");
 					}
 					else {
-						System.out.println("Employee already in the list.");
+						if(company.add(management)) {
+							System.out.println("Employee added.");
+						}
+						else {
+							System.out.println("Employee already in the list.");
+						}
 					}
 				} 		
 			} 
@@ -145,7 +147,6 @@ public class PayrollProcessing {
 					} //no print for if employee doesnt exist or isnt parttime
 				}
 			} 
-			
 			else if(command.equals("PA")) { //earnings for all employees
 				company.print();
 				

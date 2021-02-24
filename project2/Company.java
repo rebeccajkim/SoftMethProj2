@@ -150,6 +150,9 @@ public class Company { //set, process, dept
 				System.out.println(emplist[i].toString()); //**make sure its part/full toString not just employee
 			}
 		}
+		else {
+			System.out.println("Employee database is empty.");
+		}
 	} 
 	
 	/**
